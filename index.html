@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharat Airlines | Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="admin-dashboard">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="brand">
+            <h1>✈️ Bharat Airlines Admin Hub</h1>
+            <p>Indian Airline Management System</p>
+        </div>
+        <div class="admin-profile">
+            👑 Administrator (super admin)
+        </div>
+    </div>
+
+    <!-- KPI Cards (live counts) -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-info">
+                <h3>Total Airlines</h3>
+                <div class="stat-number" id="statCarriers">0</div>
+            </div>
+            <div class="stat-icon">🏢</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <h3>Active Bookings</h3>
+                <div class="stat-number" id="statActiveBookings">0</div>
+            </div>
+            <div class="stat-icon">🎫</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <h3>Total Flights</h3>
+                <div class="stat-number" id="statFlights">0</div>
+            </div>
+            <div class="stat-icon">✈️</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <h3>Registered Users</h3>
+                <div class="stat-number" id="statUsers">0</div>
+            </div>
+            <div class="stat-icon">👥</div>
+        </div>
+    </div>
+
+    <!-- AIRLINE MANAGEMENT SECTION with Multi-Select Delete -->
+    <div class="section-title">
+        <span class="title-icon">🏢</span> Airline Management (Discounts & Refund Rules)
+    </div>
+    <div class="card-panel">
+        <div class="panel-header">
+            <h3>📋 All Airlines</h3>
+            <div class="btn-group">
+                <button class="btn-primary" id="showAddCarrierBtn">➕ Add Airline</button>
+                <button class="btn-danger" id="deleteSelectedCarriersBtn">🗑️ Delete Selected Airlines</button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="carrierTable">
+                <thead>
+                    <tr>
+                        <th class="checkbox-col"><input type="checkbox" id="selectAllCarriers"></th>
+                        <th>ID</th><th>Airline Name</th><th>30D Disc%</th><th>60D Disc%</th><th>90D Disc%</th>
+                        <th>Bulk Disc%</th><th>Refund 2D%</th><th>Refund 10D%</th><th>Refund 20D+%</th>
+                        <th>Silver%</th><th>Gold%</th><th>Platinum%</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="carrierTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Inline Add/Edit Airline Form -->
+        <div id="carrierFormContainer" style="display: none; margin-top: 1.5rem; border-top: 1px solid #e2edf2; padding-top: 1.2rem;">
+            <h4 id="formTitle">✏️ Airline Details</h4>
+            <div class="form-grid" id="carrierFormFields"></div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-primary" id="saveCarrierBtn">Save Airline</button>
+                <button class="btn-secondary" id="cancelCarrierBtn">Cancel</button>
+            </div>
+            <div id="carrierFormMsg" class="message-toast" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- FLIGHT MANAGEMENT SECTION with Multi-Select Delete -->
+    <div class="section-title">
+        <span class="title-icon">✈️</span> Flight Inventory Management
+    </div>
+    <div class="card-panel">
+        <div class="panel-header">
+            <h3>📋 All Flights & Seat Availability</h3>
+            <div class="btn-group">
+                <button class="btn-primary" id="viewAllFlightsBtn">👁️ View All</button>
+                <button class="btn-primary" id="showAddFlightBtn">➕ Add Flight</button>
+                <button class="btn-danger" id="deleteSelectedFlightsBtn">🗑️ Delete Selected Flights</button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="flightsTable">
+                <thead>
+                    <tr>
+                        <th class="checkbox-col"><input type="checkbox" id="selectAllFlights"></th>
+                        <th>Flight ID</th><th>Airline</th><th>Origin</th><th>Destination</th><th>Fare (₹)</th>
+                        <th>Economy Seats</th><th>Business Seats</th><th>Executive Seats</th><th>Travel Date</th><th>Status</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="flightsTableBody"></tbody>
+            </table>
+        </div>
+        <div id="flightFormContainer" style="display: none; margin-top: 1.5rem; border-top: 1px solid #e2edf2; padding-top: 1.2rem;">
+            <h4 id="flightFormTitle">➕ Add New Flight</h4>
+            <div class="form-grid" id="flightFormFields"></div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-primary" id="saveFlightBtn">Save Flight</button>
+                <button class="btn-secondary" id="cancelFlightBtn">Cancel</button>
+            </div>
+            <div id="flightFormMsg" class="message-toast" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- BOOKING HISTORY SECTION -->
+    <div class="section-title">
+        <span class="title-icon">📋</span> Booking History & Passenger Details
+    </div>
+    <div class="card-panel">
+        <div class="panel-header">
+            <h3>All Bookings (Passenger info, cancellation & refund)</h3>
+            <div class="btn-group">
+                <button class="btn-secondary" id="refreshBookingsBtn">🔄 Refresh</button>
+                <input type="text" id="searchBookingInput" placeholder="🔍 Search by Booking ID / User" style="padding: 0.45rem 1rem; border-radius: 60px; border: 1px solid #cbd5e1; width: 220px;">
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="bookingTable">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th><th>User ID</th><th>Passenger Name</th><th>Flight ID</th>
+                        <th>Travel Date</th><th>Class</th><th>Seats</th><th>Amount (₹)</th><th>Status</th><th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingTableBody"></tbody>
+            </table>
+        </div>
+        <div id="refundMessagePanel" style="margin-top: 12px; font-size: 0.8rem; background: #fef9e3; padding: 8px 16px; border-radius: 40px; display: none;"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
